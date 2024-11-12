@@ -11,9 +11,7 @@ class ManagerBase(ABC):
         self._user_port = user_port
         self._mapper_port = mapper_port
         self._reducer_port = reducer_port
-        
-        self._mapper_conn = []
-        self._reducer_conn = None
+        self._init_resources()
         
         # Flags indicating the current status of the manager
         self._running = False
@@ -22,28 +20,20 @@ class ManagerBase(ABC):
         self._model = None
         self._optimizer = None
         self._conf = None
-
-    @abstractmethod
-    def startListeningUser(self):...
+        
     
     @abstractmethod
-    def handleUserConnection(self, socket):...
-    
-    @abstractmethod
-    def startListeningMapper(self):...
-    
-    @abstractmethod
-    def handleMapperConnection(self, socket):...
-    
-    @abstractmethod
-    def startListeningReducer(self):...
-    
-    @abstractmethod
-    def handleReducerConnection(self, socket):...
-    
+    def _init_resources(self):...
+        
     @abstractmethod
     def start(self):...
     
     @abstractmethod
     def stop(self):...
+    
+    def isRunning(self):
+        return self._running
+    
+    def isBusy(self):
+        return self._busy
     
