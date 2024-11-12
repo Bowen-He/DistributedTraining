@@ -20,20 +20,21 @@ class StandardManager(ManagerBase):
     
     def start(self):
         self._running = True
-        self._thread_pool['user_thread'] = threading.Thread(target=self._user_connection_handler.startListening, args=(self.handle_computation,))
+        self._thread_pool['user_thread'] = threading.Thread(target=self._user_connection_handler.startListening, args=(self.handle_user_request,))
         self._thread_pool['mapper_thread'] = threading.Thread(target=self._mapper_connection_handler.startListening)
         self._thread_pool['reducer_thread'] = threading.Thread(target=self._reducer_connection_handler.startListening)
-        for key, value in self._thread_pool.items():
+        for _, value in self._thread_pool.items():
             value.start()
     
     def stop(self):
         self._running = False
         
-    def handle_computation(self, user_socket):
+    def handle_user_request(self, user_socket):
         if self._busy:
             return "Currently Busy, Try again later."
         else:
             self._busy = True
+            self._thread_pool['computation_thread'] 
             return "Initialized training."
             
         
