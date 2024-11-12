@@ -1,4 +1,5 @@
 from .ManagerBase import ManagerBase
+from utils.sockets import is_socket_alive
 
 import threading
 import time
@@ -42,7 +43,7 @@ class StandardManager(ManagerBase):
         
         try:
             while self._running:
-                client_socket, addr = server_socket.accept
+                client_socket, addr = server_socket.accept()
                 client_thread = threading.Thread(target=self.handleReducerConnection, args=(client_socket))
                 client_thread.start()
         finally:
@@ -50,9 +51,14 @@ class StandardManager(ManagerBase):
     
     def handleReducerConnection(self, socket):
         if self._reducer_conn is not None:
-           
+           if is_socket_alive(self._reducer_conn):
+               print("Reducer is already Connected.")
+           else:
+               print("Replace dead reducer.")
+               self._reducer_conn = socket
         else:
-            self._
+            print("Accept reducer.")
+            self._reducer_conn = socket
     
     def start(self):
         pass
